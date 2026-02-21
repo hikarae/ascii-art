@@ -1,13 +1,17 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
+	_ "image/gif"
 	_ "image/jpeg" // support for jpeg
 	"image/png"
+	"log"
 	"os"
+	"path/filepath"
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
@@ -15,20 +19,30 @@ import (
 )
 
 // gradient of chars from dark to light
-const asciiChars = " .:-=+*#%@"
+const asciiChars = " .'`^\",:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 
 func main() {
-	file, err := os.Open("input.jpg")
+	// --output--direcotry set path to output directory
+	diroutput := flag.String("output-directory", ".", "path to output directory")
+	fileoutput := flag.String("output-file", ".", "path to output file")
+
+	// --input-directory set path to input directory default directory . --input-file set image file name default image file name input.jpg
+	dirinput := flag.String("input-directory", ".", "Path to image directory")
+	fileinput := flag.String("input-file", "input.jpg", "Image file name")
+	flag.Parse()
+
+	fullinputpath := filepath.Join(*dirinput, *fileinput)
+	fulloutputpath := filepath.Join(*diroutput, *fileoutput)
+
+	file, err := os.Open(fullinputpath)
 	if err != nil {
-		fmt.Println("Error with open image:", err)
-		return
+		log.Fatalf("Error with open image %s: %v ", fullinputpath, err)
 	}
 	defer file.Close()
 
 	img, _, err := image.Decode(file)
 	if err != nil {
-		fmt.Println("Error with decode image:", err)
-		return
+		log.Fatalf("Error with decode image: %v", err)
 	}
 
 	bounds := img.Bounds()
@@ -70,18 +84,16 @@ func main() {
 		}
 	}
 
-	outFile, err := os.Create("asciiart.png")
+	outFile, err := os.Create(fulloutputpath)
 	if err != nil {
-		fmt.Println("Error with create image:", err)
-		return
+		log.Fatalf("Error with create image: %v", err)
 	}
 	defer outFile.Close()
 
 	err = png.Encode(outFile, outImg)
 	if err != nil {
-		fmt.Println("Error with save image:", err)
-		return
+		log.Fatalf("Error with save image: %v", err)
 	}
 
-	fmt.Println("Save in asciiart.png")
+	fmt.Println("Save in ", fulloutputpath)
 }
