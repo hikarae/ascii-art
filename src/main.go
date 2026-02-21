@@ -24,7 +24,7 @@ const asciiChars = " .'`^\",:;Il!i><~+_-?][}{1)(|/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao
 func main() {
 	// --output--direcotry set path to output directory
 	diroutput := flag.String("output-directory", ".", "path to output directory")
-	fileoutput := flag.String("output-file", ".", "path to output file")
+	fileoutput := flag.String("output-file", "output.png", "path to output file")
 
 	// --input-directory set path to input directory default directory . --input-file set image file name default image file name input.jpg
 	dirinput := flag.String("input-directory", ".", "Path to image directory")
